@@ -1,0 +1,167 @@
+// sensor 1
+int pinIrC = A3;
+int pinIrD = 12;
+int pinIrE = 8;
+
+#define BRANCO 1
+#define PRETO 0
+
+// motores
+int pinoMDa = 10;
+int pinoMDb = 9;
+int pinoMEa = 5; // Pino PWM para motor 2
+int pinoMEb = 6; // Pino PWM para motor 2
+
+void setup() {
+    Serial.begin(9600);
+
+    // Sensor Direito
+    pinMode(pinIrD, INPUT);
+    // Sensor Central
+    pinMode(pinIrC, INPUT);
+    // Sensor Esquerdo
+    pinMode(pinIrE, INPUT);
+
+    // Motor 1
+    pinMode(pinoMDa, OUTPUT);
+    pinMode(pinoMDb, OUTPUT);
+    // Motor 2
+    pinMode(pinoMEa, OUTPUT);
+    pinMode(pinoMEb, OUTPUT);
+}
+
+void loop() {
+    // Sensor Direito
+    bool valorLidoD = digitalRead(pinIrD);
+    // Sensor Central
+    int valorLidoC = analogRead(pinIrC);
+    // Sensor Esquerdo
+    bool valorLidoE = digitalRead(pinIrE);
+
+
+  Serial.print("Valor:   ");
+ // Serial.print(estadoD2);
+  Serial.print("  ");
+  Serial.print(valorLidoD);
+  Serial.print("  ");
+  Serial.print(valorLidoC);
+  Serial.print("  ");
+  Serial.println(valorLidoE);
+  //Serial.print("  ");
+  //Serial.println(estadoE2);
+
+    if (valorLidoD == BRANCO && valorLidoC == PRETO && valorLidoE == BRANCO ) {
+      frente();
+    } 
+
+    if(valorLidoD == PRETO && valorLidoC == PRETO && valorLidoE == PRETO ){
+      
+      if(sensorCorDir == VERDE && sensorCorEsq != VERDE){
+        direita();
+      }
+      else if(sensorCorDir != VERDE && sensorCorEsq == VERDE){
+        esquerda();
+      }
+      else if(sensorCorDir != VERDE && sensorCorEsq != VERDE){
+        frente();
+      }
+
+    }
+    //O carrinho tá desviando pra esquerda
+    else if (valorLidoD == PRETO && valorLidoC == BRANCO && valorLidoE == BRANCO) {
+      digitalWrite(pinoMDa, LOW);
+      digitalWrite(pinoMDb, LOW);
+      analogWrite(pinoMEa, HIGH);
+      digitalWrite(pinoMEb, LOW);
+    } 
+
+    //O carrinho tá desviando pra direita
+    else if (valorLidoD == BRANCO && valorLidoC == BRANCO && valorLidoE == PRETO) {
+      analogWrite(pinoMDa, HIGH);
+      digitalWrite(pinoMDb, LOW);
+      digitalWrite(pinoMEa, LOW);
+      digitalWrite(pinoMEb, LOW);
+    } 
+
+    if (valorLidoD == PRETO && valorLidoC == PRETO && valorLidoE == PRETO 
+    || valorLidoD == BRANCO && valorLidoC == PRETO && valorLidoE == PRETO 
+    || valorLidoD == PRETO && valorLidoC == PRETO && valorLidoE == BRANCO) {
+      if(sensorCorDir == VERDE && sensorCorEsq != VERDE){
+        direita();
+      }
+      else if(sensorCorDir != VERDE && sensorCorEsq == VERDE){
+        esquerda();
+      }
+    }
+
+  
+    /*else if (valorLidoD == PRETO && valorLidoC < 500 && valorLidoE == BRANCO) {
+    digitalWrite(pinoMDa, LOW);
+    digitalWrite(pinoMDb, LOW);
+    analogWrite(pinoMEa, 140);
+    digitalWrite(pinoMEb, LOW);
+    } 
+    
+    else if (valorLidoD == BRANCO && valorLidoC < 500 && valorLidoE == PRETO) {
+    analogWrite(pinoMDa, 140);
+    digitalWrite(pinoMDb, LOW);
+    digitalWrite(pinoMEa, LOW);
+    digitalWrite(pinoMEb, LOW);
+    } 
+
+
+    // else if (valorLidoE && valorLidoC) {
+    //     esquerda();
+    // } else if (valorLidoD && valorLidoC) {
+    //     direita();
+    // }*/
+    
+}
+void frente() {
+    // Movimento para frente
+    digitalWrite(pinoMDa, 255);
+    digitalWrite(pinoMDb, 0);
+    digitalWrite(pinoMEa, 255);
+    digitalWrite(pinoMEb, 0);
+}
+
+void direita() {
+    // Ajustar para a direita
+    digitalWrite(pinoMDa, 0);
+    digitalWrite(pinoMDb, 255);
+    digitalWrite(pinoMEa, 255);
+    digitalWrite(pinoMEb, 0);
+}
+
+void esquerda() {
+    // Ajustar para a esquerda
+    digitalWrite(pinoMDa, 255);
+    digitalWrite(pinoMDb, 0);
+    digitalWrite(pinoMEa, 0);
+    digitalWrite(pinoMEb, 255);
+}
+
+void parar() {
+  
+    digitalWrite(pinoMDa, 0);
+    digitalWrite(pinoMDb, 0);
+    digitalWrite(pinoMEa, 0);
+    digitalWrite(pinoMEb, 0);
+
+}
+
+// void ajustarDireita() {
+//     // Ajustar direção para a direita
+//     digitalWrite(pinoM1a, HIGH);
+//     digitalWrite(pinoM1b, LOW);
+//     analogWrite(pinoM2a, 255);
+//     analogWrite(pinoM2b, 240);
+// }
+
+// void ajustarEsquerda() {
+//     // Ajustar direção para a esquerda
+//     digitalWrite(pinoM1a, HIGH);
+//     digitalWrite(pinoM1b, LOW);
+//     analogWrite(pinoM2a, 240);
+//     analogWrite(pinoM2b, 255);
+// }
