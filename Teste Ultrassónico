@@ -1,0 +1,43 @@
+ #include <NewPing.h>  // Inclui a biblioteca NewPing para trabalhar com o sensor ultrassônico
+#define TRIG 10        // Define o pino 10 como o pino de Trigger (emissor) do sensor ultrassônico
+#define ECHO 9         // Define o pino 9 como o pino de Echo (receptor) do sensor ultrassônico
+#define DELAY 1000UL   // Define um atraso de 1000 milissegundos (1 segundo) para a medição do sensor ultrassônico
+NewPing sonic(TRIG, ECHO);  // Cria um objeto 'sonic' para controlar o sensor ultrassônico com os pinos TRIG e ECHO
+
+unsigned long time1, time2, time3;  // Variáveis para armazenar os tempos de referência
+int led1 = 11, led2 = 12;  // Pinos 11 e 12 para controlar os LEDs
+int estado1 = 0, estado2 = 0;  // Variáveis de estado para controlar se os LEDs estão acesos ou apagados
+
+void setup() {
+  Serial.begin(9600);  // Inicia a comunicação serial a 9600 baudios para enviar informações ao monitor serial
+  pinMode(led1, OUTPUT);  // Configura o pino do LED 1 como saída
+  pinMode(led2, OUTPUT);  // Configura o pino do LED 2 como saída
+  // Inicializa as variáveis de tempo com o valor atual de milissegundos
+  time1 = millis();
+  time2 = millis();
+  time3 = millis();
+}
+
+void loop() {
+  // Verifica se passou o tempo definido em time1 (1 segundo)
+  if (millis() > time1) {
+    time1 = millis() + DELAY;  // Atualiza time1 para que a próxima medição aconteça após 1000 ms
+    int distance = sonic.ping_cm();  // Realiza uma medição de distância em centímetros
+    Serial.print("Distância (cm): ");  // Imprime o texto "Distância (cm):"
+    Serial.println(distance);  // Imprime a distância medida em centímetros
+  }
+
+  // Verifica se passou o tempo definido em time2 (100 ms)
+  if (millis() > time2) {
+    time2 = millis() + DELAY / 10;  // Atualiza time2 para que a próxima ação aconteça após 100 ms
+    digitalWrite(led1, estado1);  // Muda o estado do LED 1 de acordo com o valor de 'estado1'
+    estado1 = !estado1;  // Altera o valor de 'estado1' para alternar entre 0 e 1, fazendo o LED piscar
+  }
+  
+  // Verifica se passou o tempo definido em time3 (200 ms)
+  if (millis() > time3) {
+    time3 = millis() + DELAY / 5;  // Atualiza time3 para que a próxima ação aconteça após 200 ms
+    digitalWrite(led2, estado2);  // Muda o estado do LED 2 de acordo com o valor de 'estado2'
+    estado2 = !estado2;  // Altera o valor de 'estado2' para alternar entre 0 e 1, fazendo o LED piscar
+  }
+}
