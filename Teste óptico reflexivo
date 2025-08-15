@@ -1,0 +1,14 @@
+#define sensor  A5
+
+void setup() {
+    Serial.begin(9600);
+
+    pinMode(sensor, INPUT);
+}
+void loop() {
+
+int valorOptico = analogRead(sensor);
+
+Serial.print("Valor lido");
+Serial.println(valorOptico);
+}
