@@ -1,0 +1,31 @@
+#include <Adafruit_NeoPixel.h>      //Adiciona a biblioteca Adafruit NeoPixel
+#define D_in 6       //Nomeia o pino 6 do Arduino
+#define qtdeLeds 4    //Informa a quantidade de LEDs que serão ligados em cascata
+Adafruit_NeoPixel pixels(qtdeLeds, D_in);     //Instancia o objeto "pixels", informando a quantidade e o pino de sinal
+int pinLdr = A2;
+void setup() {
+  Serial.begin(9600);
+  pinMode(pinLdr, INPUT);
+  pinMode(D_in, OUTPUT);      //Configura o pino 6 como saída
+  pixels.begin();             //Inicia o objeto "pixels"
+}
+void loop() {
+  pixels.clear();      //desliga todos os LEDs
+  //for(int i=0; i<qtdeLeds; i++){        //para i = 0, se i menor que a quantidade de leds, incremente 1 em i
+   pixels.setPixelColor(0, pixels.Color(0, 255, 0));     //liga o led correspondente ao número da variável i na cor vermelha
+    pixels.show();      //executa os parâmetros do comando acima
+   // delay(500);         //Aguarda 500 milissegundos
+    
+    //pixels.setPixelColor(i, pixels.Color(0, 255, 0));     //liga o led correspondente ao número da variável i na cor verde
+   // pixels.show();      //executa os parâmetros do comando acima
+   // delay(500);         //Aguarda 500 milissegundos
+    
+    //pixels.setPixelColor(i, pixels.Color(0, 0, 255));     //liga o led correspondente ao número da variável i na cor azul
+    //pixels.show();      //executa os parâmetros do comando acima
+   // delay(500);         //Aguarda 500 milissegundos
+
+    int leitura = analogRead(pinLdr);
+    Serial.println(leitura);
+    delay(500);
+  //}
+}
