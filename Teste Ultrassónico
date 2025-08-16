@@ -1,4 +1,4 @@
- #include <NewPing.h>  // Inclui a biblioteca NewPing para trabalhar com o sensor ultrassônico
+#include <NewPing.h>  // Inclui a biblioteca NewPing para trabalhar com o sensor ultrassônico
 #define TRIG 10        // Define o pino 10 como o pino de Trigger (emissor) do sensor ultrassônico
 #define ECHO 9         // Define o pino 9 como o pino de Echo (receptor) do sensor ultrassônico
 #define DELAY 1000UL   // Define um atraso de 1000 milissegundos (1 segundo) para a medição do sensor ultrassônico
