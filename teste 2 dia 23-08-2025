@@ -1,0 +1,153 @@
+// Sensor linha preta
+int pinIrC = 9;
+int pinIrD = 12;
+int pinIrE = 8;
+
+// Sensores de Cor
+int pinCorD = A4;
+int pinCorE = A5;
+
+#define BRANCO 0
+#define PRETO 1
+
+#define VERDE 10
+
+// Motores Frente
+int pinoFMDa = 11;
+int pinoFMDb = 10;
+int pinoFMEa = 6; //ok
+int pinoFMEb = 5;//ok
+
+void setup() {
+  Serial.begin(9600);
+
+  // Sensor Direito
+  pinMode(pinIrD, INPUT);
+  // Sensor Central
+  pinMode(pinIrC, INPUT);
+  // Sensor Esquerdo
+  pinMode(pinIrE, INPUT);
+
+  // Motor Frente Direita
+  pinMode(pinoFMDa, OUTPUT);
+  pinMode(pinoFMDb, OUTPUT);
+  // Motor Frente Esquerda
+  pinMode(pinoFMEa, OUTPUT);
+  pinMode(pinoFMEb, OUTPUT);
+
+}
+
+void loop() {
+  // Sensor Direito
+  int valorLidoD = digitalRead(pinIrD);
+  // Sensor Central
+  int valorLidoC = digitalRead(pinIrC);
+  // Sensor Esquerdo
+  int valorLidoE = digitalRead(pinIrE);
+
+  int sensorCorDir = analogRead(pinCorD);
+  int sensorCorEsq = analogRead(pinCorE);
+
+
+ /*// Serial.print("Valor:   ");
+ // Serial.print(estadoD2);
+  Serial.print(" Direita ");
+  Serial.println(valorLidoD);
+  Serial.print(" Centro ");
+  Serial.println(valorLidoC);
+  Serial.print(" Esquerda ");
+  Serial.println(valorLidoE);
+  delay(500);*/
+
+  if (valorLidoD == BRANCO && valorLidoC == PRETO && valorLidoE == BRANCO ) {
+    frente();
+  } 
+
+  // Checa a interseção sem marcação
+  /*if (valorLidoD == BRANCO && valorLidoC == PRETO && valorLidoE == BRANCO && sensorCorDir == VERDE || valorLidoD == BRANCO && valorLidoC == PRETO && valorLidoE == BRANCO && sensorCorEsq == VERDE) {
+    frente();
+  }
+  // Checa as interseções com marcação 
+  if(valorLidoD == PRETO && valorLidoC == PRETO && valorLidoE == PRETO || valorLidoD == PRETO && valorLidoC == BRANCO && valorLidoE == PRETO){
+    
+    if(sensorCorDir == VERDE && sensorCorEsq != VERDE){
+      direita();
+    }
+    else if(sensorCorDir != VERDE && sensorCorEsq == VERDE){
+      esquerda();
+    }
+    else if(sensorCorDir != VERDE && sensorCorEsq != VERDE){
+      frente();
+    }
+    else if(sensorCorDir == VERDE && sensorCorEsq == VERDE){
+      volta();
+      //delay(500);
+      frente();
+    }
+
+  }*/
+  //O carrinho tá desviando pra esquerda
+  if (valorLidoD == PRETO && valorLidoC == BRANCO && valorLidoE == BRANCO) {
+    direita();
+  } 
+
+  //O carrinho tá desviando pra direita
+  if (valorLidoD == BRANCO && valorLidoC == BRANCO && valorLidoE == PRETO) {
+    esquerda();
+  } 
+
+ /* if (valorLidoD == PRETO && valorLidoC == PRETO && valorLidoE == PRETO || valorLidoD == BRANCO && valorLidoC == PRETO && valorLidoE == PRETO || valorLidoD == PRETO && valorLidoC == PRETO && valorLidoE == BRANCO) {
+    if(sensorCorDir == VERDE && sensorCorEsq != VERDE){
+      direita();
+    }
+
+    else if(sensorCorDir != VERDE && sensorCorEsq == VERDE){
+      esquerda();
+    }
+  }*/
+}
+void frente() {
+    // Movimento para frente
+  analogWrite(pinoFMDa, 200);
+  analogWrite(pinoFMDb, 0);
+  analogWrite(pinoFMEa, 200);
+  analogWrite(pinoFMEb, 0);
+}
+
+void direita() {
+    // Ajustar para a direita
+  analogWrite(pinoFMDa, 0);
+  analogWrite(pinoFMDb, 200);
+  analogWrite(pinoFMEa, 200);
+  analogWrite(pinoFMEb, 0);
+
+}
+
+void esquerda() {
+    // Ajustar para a esquerda
+  analogWrite(pinoFMDa, 200);
+  analogWrite(pinoFMDb, 0);
+  analogWrite(pinoFMEa, 0);
+  analogWrite(pinoFMEb, 200);
+
+}
+
+void volta(){
+
+  analogWrite(pinoFMDa, 200);
+  analogWrite(pinoFMDb, 0);
+  analogWrite(pinoFMEa, 0);
+  analogWrite(pinoFMEb, 200);
+
+
+}
+
+void parar() {
+  
+  analogWrite(pinoFMDa, 0);
+  analogWrite(pinoFMDb, 0);
+  analogWrite(pinoFMEa, 0);
+  analogWrite(pinoFMEb, 0);
+
+
+}
