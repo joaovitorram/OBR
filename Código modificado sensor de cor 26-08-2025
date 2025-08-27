@@ -1,0 +1,127 @@
+
+#include <Adafruit_NeoPixel.h>      //Adiciona a biblioteca Adafruit NeoPixel
+#define D_in 4       //Nomeia o pino 4 do Arduino
+#define qtdeLeds 1
+#define E_in 3       //Nomeia o pino 3 do Arduino
+Adafruit_NeoPixel pixelsD(qtdeLeds, D_in);     //Instancia o objeto "pixelsD", informando a quantidade e o pino de sinal
+Adafruit_NeoPixel pixelsE(E_in);     //Instancia o objeto "pixelsE", informando a quantidade e o pino de sinal
+int pinLdrD = A2;
+int pinLdrE = A3;
+
+int rdmax, rdmin;
+int gdmax, gdmin;
+int bdmax, bdmin;
+
+int remax, remin;
+int gemax, gemin;
+int bemax, bemin;
+
+int lrd,lgd,lbd;
+
+int lre,lge,lbe;
+
+void fazer_leitura_pura() {
+  pixelsD.setPixelColor(0, pixelsD.Color(255, 0, 0));     //liga o led correspondente ao número da variável i na cor vermelha
+  pixelsD.show();
+  delay(200);
+  lrd = analogRead(pinLdrD);
+  delay(200);
+
+  pixelsD.setPixelColor(0, pixelsD.Color(0, 255, 0));     //liga o led correspondente ao número da variável i na cor vermelha
+  pixelsD.show();
+  delay(200);
+  lgd = analogRead(pinLdrD);
+  delay(200);
+
+  pixelsD.setPixelColor(0, pixelsD.Color(0, 0, 255));     //liga o led correspondente ao número da variável i na cor vermelha
+  pixelsD.show();
+  delay(200);
+  lbd = analogRead(pinLdrD);
+  delay(200);
+}
+
+
+
+void fazer_leitura_normalizada() {
+  pixelsD.setPixelColor(0, pixelsD.Color(255, 0, 0));     //liga o led correspondente ao número da variável i na cor vermelha
+  pixelsD.show();
+  delay(60);
+  lrd = analogRead(pinLdrD);
+  lrd = map(lrd, rdmin, rdmax, 0,1023);
+  delay(20);
+
+  pixelsD.setPixelColor(0, pixelsD.Color(0, 255, 0));     //liga o led correspondente ao número da variável i na cor vermelha
+  pixelsD.show();
+  delay(60);
+  lgd = analogRead(pinLdrD);
+  lgd = map(lgd, gdmin, gdmax, 0,1023);
+  delay(20);
+
+  pixelsD.setPixelColor(0, pixelsD.Color(0, 0, 255));     //liga o led correspondente ao número da variável i na cor vermelha
+  pixelsD.show();
+  delay(60);
+  lbd = analogRead(pinLdrD);
+  lbd = map(lbd, bdmin, bdmax, 0,1023);
+  delay(20);
+}
+
+
+void setup() {
+  
+  pinMode(pinLdrD, INPUT);
+  pinMode(D_in, OUTPUT);      //Configura o pino 6 como saída
+  pixelsD.begin();             //Inicia o objeto "pixelsD"
+
+  pixelsD.clear();  
+  Serial.begin(9600);
+  delay(1000);
+
+  Serial.println("Iniciando processo de calibracao, prepare o branco para leitura...");
+  delay(3000);
+
+  fazer_leitura_pura();
+  rdmax = lrd;
+  gdmax = lgd;
+  bdmax = lbd;
+
+  Serial.println("Leitura realizada:");
+  Serial.print("rdmax: "); Serial.println(rdmax);
+  Serial.print("gdmax: "); Serial.println(gdmax);
+  Serial.print("bdmax: "); Serial.println(bdmax);
+
+  delay(3000);
+
+  
+  Serial.println("Iniciando processo de calibracao, prepare o preto para leitura...");
+  delay(3000);
+  
+  fazer_leitura_pura();
+  rdmin = lrd;
+  gdmin = lgd;
+  bdmin = lbd;
+
+  Serial.println("Leitura realizada:");
+  Serial.print("rdmin: "); Serial.println(rdmin);
+  Serial.print("gdmin: "); Serial.println(gdmin);
+  Serial.print("bdmin: "); Serial.println(bdmin);
+
+  delay(3000);
+}
+
+void loop() {
+
+      //desliga todos os LEDs
+
+  fazer_leitura_normalizada();
+  Serial.print(lrd);
+  Serial.print("\t");
+  Serial.print(lgd);
+  Serial.print("\t");
+  Serial.println(lbd);
+  
+
+  
+
+
+//}
+}
