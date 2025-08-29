@@ -1,0 +1,176 @@
+// Sensor linha preta
+int pinIrC = 11;
+int pinIrD = 12;
+int pinIrE = 10;
+
+// Sensores de Cor
+int pinCorD = A4;
+int pinCorE = A5;
+
+#define BRANCO 0
+#define PRETO 1
+
+#define VERDE 10
+
+// Motores Frente
+int pinoFMDa = 7;
+int pinoFMDb = 6;
+int pinoFMEa = 4; 
+int pinoFMEb = 5;
+
+// Motor Tras
+int pinoTMDa = 8;
+int pinoTMDb = 9;
+int pinoTMEa = 3; 
+int pinoTMEb = 2; 
+
+void setup() {
+  Serial.begin(9600);
+
+  // Sensor Direito
+  pinMode(pinIrD, INPUT);
+  // Sensor Central
+  pinMode(pinIrC, INPUT);
+  // Sensor Esquerdo
+  pinMode(pinIrE, INPUT);
+
+  // Motor Frente Direita
+  pinMode(pinoFMDa, OUTPUT);
+  pinMode(pinoFMDb, OUTPUT);
+  // Motor Frente Esquerda
+  pinMode(pinoFMEa, OUTPUT);
+  pinMode(pinoFMEb, OUTPUT);
+
+  // Motor Tras Direita
+  pinMode(pinoTMDa, OUTPUT);
+  pinMode(pinoTMDb, OUTPUT);
+
+  // Motor Tras Esquerda
+  pinMode(pinoTMEa, OUTPUT);
+  pinMode(pinoTMEb, OUTPUT);
+}
+
+void loop() {
+  // Sensor Direito
+  int valorLidoD = digitalRead(pinIrD);
+  // Sensor Central
+  int valorLidoC = digitalRead(pinIrC);
+  // Sensor Esquerdo
+  int valorLidoE = digitalRead(pinIrE);
+
+  int sensorCorDir = digitalRead(pinCorD);
+  int sensorCorEsq = digitalRead(pinCorE);
+
+  Serial.println(" Direita ");
+  Serial.print(valorLidoD);
+  Serial.print(" Centro ");
+  Serial.print(valorLidoC);
+  Serial.println(" Esquerda ");
+  Serial.print(valorLidoE);
+
+  if (valorLidoD == 0 && valorLidoC == 1 && valorLidoE == 0 ) {
+    digitalWrite(pinoFMDa, HIGH);
+    digitalWrite(pinoFMDb, LOW);
+    digitalWrite(pinoFMEa, HIGH);
+    digitalWrite(pinoFMEb, LOW);
+
+    digitalWrite(pinoTMDa, HIGH);
+    digitalWrite(pinoTMDb, LOW);
+    digitalWrite(pinoTMEa, HIGH);
+    digitalWrite(pinoTMEb, LOW);
+  } 
+
+  //O carrinho tá desviando pra esquerda
+  else if (valorLidoD == PRETO && valorLidoC == BRANCO && valorLidoE == BRANCO) {
+    digitalWrite(pinoFMDa, LOW);
+    digitalWrite(pinoFMDb, HIGH);
+    digitalWrite(pinoFMEa, HIGH);
+    digitalWrite(pinoFMEb, LOW);
+
+    digitalWrite(pinoTMDa, LOW);
+    digitalWrite(pinoTMDb, HIGH);
+    digitalWrite(pinoTMEa, HIGH);
+    digitalWrite(pinoTMEb, LOW);
+  } 
+
+  //O carrinho tá desviando pra direita
+  else if (valorLidoD == BRANCO && valorLidoC == BRANCO && valorLidoE == PRETO) {
+    digitalWrite(pinoFMDa, HIGH);
+    digitalWrite(pinoFMDb, LOW);
+    digitalWrite(pinoFMEa, LOW);
+    digitalWrite(pinoFMEb, HIGH);
+
+    digitalWrite(pinoTMDa, HIGH);
+    digitalWrite(pinoTMDb, LOW);
+    digitalWrite(pinoTMEa, LOW);
+    digitalWrite(pinoTMEb, HIGH);
+  } 
+
+
+}
+void frente() {
+    // Movimento para frente
+    digitalWrite(pinoFMDa, LOW);
+    digitalWrite(pinoFMDb, HIGH);
+    digitalWrite(pinoFMEa, HIGH);
+    digitalWrite(pinoFMEb, LOW);
+
+    digitalWrite(pinoTMDa, LOW);
+    digitalWrite(pinoTMDb, HIGH);
+    digitalWrite(pinoTMEa, HIGH);
+    digitalWrite(pinoTMEb, LOW);
+}
+
+void direita() {
+    // Ajustar para a direita
+    digitalWrite(pinoFMDa, LOW);
+    digitalWrite(pinoFMDb, HIGH);
+    digitalWrite(pinoFMEa, HIGH);
+    digitalWrite(pinoFMEb, LOW);
+
+    digitalWrite(pinoTMDa, LOW);
+    digitalWrite(pinoTMDb, HIGH);
+    digitalWrite(pinoTMEa, HIGH);
+    digitalWrite(pinoTMEb, LOW);
+}
+
+void esquerda() {
+    // Ajustar para a esquerda
+    digitalWrite(pinoFMDa, HIGH);
+    digitalWrite(pinoFMDb, LOW);
+    digitalWrite(pinoFMEa, LOW);
+    digitalWrite(pinoFMEb, HIGH);
+
+    digitalWrite(pinoTMDa, HIGH);
+    digitalWrite(pinoTMDb, LOW);
+    digitalWrite(pinoTMEa, LOW);
+    digitalWrite(pinoTMEb, HIGH);
+}
+
+void volta(){
+
+    digitalWrite(pinoFMDa, HIGH);
+    digitalWrite(pinoFMDb, LOW);
+    digitalWrite(pinoFMEa, LOW);
+    digitalWrite(pinoFMEb, HIGH);
+
+    digitalWrite(pinoTMDa, HIGH);
+    digitalWrite(pinoTMDb, LOW);
+    digitalWrite(pinoTMEa, LOW);
+    digitalWrite(pinoTMEb, HIGH);
+
+}
+
+void parar() {
+  
+    digitalWrite(pinoFMDa, LOW);
+    digitalWrite(pinoFMDb, LOW);
+    digitalWrite(pinoFMEa, LOW);
+    digitalWrite(pinoFMEb, LOW);
+
+    digitalWrite(pinoTMDa, LOW);
+    digitalWrite(pinoTMDb, LOW);
+    digitalWrite(pinoTMEa, LOW);
+    digitalWrite(pinoTMEb, LOW);
+
+}
