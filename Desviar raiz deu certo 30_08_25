@@ -1,0 +1,139 @@
+#include <Servo.h>
+#include <NewPing.h>
+
+#define TRIG_PIN 7
+#define ECHO_PIN 4
+
+int pinoFMDa = 11;
+int pinoFMDb = 10;
+int pinoFMEa = 6; 
+int pinoFMEb = 5;
+
+const int DISTANCIA_SEGURO = 20;
+const int DISTANCIA_PARADA = 20;
+const int ANGULO_INICIAL = 90;
+
+Servo servo;
+NewPing sensor(TRIG_PIN, ECHO_PIN, 200); // Adicionei distância máxima
+int distanciaFrente = 0;
+int distanciaDireita = 0;
+int distanciaEsquerda = 0;
+int angulo = ANGULO_INICIAL;
+
+int estado = 0;
+
+unsigned long ultimaLeitura = 0;
+unsigned long tempoInicioManobra = 0;
+int etapaManobra = 0;
+
+void setup() {
+
+  pinMode(pinoFMDa, OUTPUT);
+  pinMode(pinoFMDb, OUTPUT);
+  pinMode(pinoFMEa, OUTPUT);
+  pinMode(pinoFMEb, OUTPUT);
+
+}
+
+void loop() {
+  if (millis() - ultimaLeitura >= 200) {
+    ultimaLeitura = millis();
+    distanciaFrente = lerDistancia();
+    
+    Serial.print("Distância: ");
+    Serial.print(distanciaFrente);
+    Serial.println(" cm");
+  }
+
+  if(distanciaFrente <= DISTANCIA_PARADA && distanciaFrente > 0){
+  evitarOb();
+  Serial.println("Vai bateeeer!"); 
+    } else {
+      andarFrente();
+    }
+  
+}
+
+int lerDistancia() {
+  delay(30); // Pequeno delay para estabilidade
+  int dist = sensor.ping_cm();
+  if (dist == 0) { // se a dist for 0, ent retornaremos 200
+    return 200;
+  } else { // se a distância for diferente de 0, vamos retornar a distância medida
+    return dist; // fazemos isso pois, as vezes, o sensor retorna 0 quando há uma grande distância
+  }
+}
+
+void evitarOb(){
+
+  parar();
+  delay(1000);
+  virarEsquerda();
+  delay(1200);
+  parar();
+  delay(1000);
+  andarFrente();
+  delay(900);
+  parar();
+  delay(1000);
+  virarDireita();
+  delay(1200);
+  parar();
+  delay(1000);
+  andarFrente();//aqui
+  delay(1300);
+  parar();
+  delay(1000);
+  virarDireita();
+  delay(1200);
+  parar();
+  delay(1000);
+  andarFrente();
+  delay(800);
+  parar();
+  delay(1000);
+  virarEsquerda();
+  delay(1000);
+  parar();
+  delay(1000);
+  andarFrente();
+}
+
+ void andarFrente() {
+  analogWrite(pinoFMDa, 170);
+  analogWrite(pinoFMDb, 0);
+  analogWrite(pinoFMEa, 170);
+  analogWrite(pinoFMEb, 0);
+ }
+
+ void parar() {
+  analogWrite(pinoFMDa, 0);
+  analogWrite(pinoFMDb, 0);
+  analogWrite(pinoFMEa, 0);
+  analogWrite(pinoFMEb, 0);
+
+ }
+
+  void virarEsquerda() {
+  analogWrite(pinoFMDa, 0);
+  analogWrite(pinoFMDb, 220);
+  analogWrite(pinoFMEa, 220);
+  analogWrite(pinoFMEb, 0);
+
+ }
+
+
+ void virarDireita()  {
+  analogWrite(pinoFMDa, 240);
+  analogWrite(pinoFMDb, 0);
+  analogWrite(pinoFMEa, 0);
+  analogWrite(pinoFMEb, 240);
+
+ }
+
+ void recuar() {
+  analogWrite(pinoFMDa, 0);
+  analogWrite(pinoFMDb, 200);
+  analogWrite(pinoFMEa, 0);
+  analogWrite(pinoFMEb, 200);
+ }
